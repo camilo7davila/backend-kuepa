@@ -1,5 +1,6 @@
 const store = require('./store')
 const mongoose = require('mongoose')
+const socket = require('../../socket').socket
 
 async function listByRoom(idRoom) {
     if (!idRoom) {
@@ -18,6 +19,15 @@ async function addMessage(data) {
     if (!mongoose.Types.ObjectId.isValid(data.room) || !mongoose.Types.ObjectId.isValid(data.user)) {
         return Promise.reject('Id de sala o usuario no validos')
     }
+    const fullMessage = {
+        room: data.room,
+        user: data.user,
+        message: data.message
+    }
+    await store.add(fullMessage)
+
+    socket.io.emit('message', fullMessage)
+
     return store.add(data)
 }
 

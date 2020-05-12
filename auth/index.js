@@ -41,7 +41,6 @@ function getToken(auth) {
     return token;
 }
 
-
 function decodeHeader(req) {
     const authorization = req.headers.authorization || '';
     const token = getToken(authorization);
