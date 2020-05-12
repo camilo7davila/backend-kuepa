@@ -5,6 +5,18 @@ function add (data) {
     return myRoom.save()
 }
 
+function searchById (id) {
+    return new Promise ((resolve,reject) => {
+        Model.findOne({_id: id}).populate('users').exec((err, room) => {
+            if(err) {
+                reject('Ocurrio un problema buscando la sala')
+            }
+            resolve (room)
+        })
+    })
+}
+
 module.exports = {
-    add
+    add,
+    search: searchById
 }

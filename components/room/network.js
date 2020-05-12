@@ -12,4 +12,12 @@ router.post('/', (req,res) => {
     })
 })
 
+router.get('/:id', (req,res) => {
+    controller.searchById(req.params.id).then(data => {
+        response.success(req,res,data, 200)
+    }).catch(e => {
+        response.error(req,res,e,500,e)
+    })
+})
+
 module.exports = router

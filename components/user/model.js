@@ -7,6 +7,7 @@ const mySchema = new Schema({
     userName: {type: String, require: true, minlength: [2, 'Minimo 2 espacios']},
     password: {type: String, required: true, minlength: [2, 'Minimo de espacios es 2']},
     rol: {type: String, required: true},
+    status: {type: Boolean}
 }, {
     timestamps: true
 })

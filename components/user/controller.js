@@ -12,7 +12,11 @@ async function addUser(data) {
         password: await bcrypt.hash(data.password, 5),
         rol: "ROL_STUDENT"
     }
-    return store.add(fullUser)
+    let newUser = await store.add(fullUser)
+
+    await store.pushRoom(newUser._id, '5ebae712ca814c4ad03a3df2')
+
+    return newUser
 }
 
 async function login(data) {
@@ -32,13 +36,15 @@ async function login(data) {
     const userFinal = {
         token: authExport.sign(auth)
     }
-    return bcrypt.compare(data.password, user.password).then(sonIguales => {
-        if (sonIguales === true) {
+    let password = await  bcrypt.compare(data.password, user.password)
+    if(password === true) {
+        let online = await store.onlineUser(user._id)
+        if(online === true) {
             return userFinal
-        } else {
-            return Promise.reject('La constraseña no coincide')
         }
-    })
+    }else {
+        return Promise.reject('Usuario o contraseña incorrectos')
+    }
 }
 
 module.exports = {
