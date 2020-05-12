@@ -27,14 +27,9 @@ async function login(data) {
     if(user === null) {
         return Promise.reject('Usuario o contraseña incorrectos')
     }
-    const auth = {
-        name: user.name,
-        userName: user.userName,
-        rol: user.rol
-    }
 
     const userFinal = {
-        token: authExport.sign(auth)
+        token: authExport.sign(user)
     }
     let password = await  bcrypt.compare(data.password, user.password)
     if(password === true) {
