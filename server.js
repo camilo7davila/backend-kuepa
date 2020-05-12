@@ -2,6 +2,7 @@ const db = require('./db')
 const express = require('express')
 const bodyParser = require('body-parser')
 const router = require('./network/routes')
+const errors = require('./network/error')
 
 db('mongodb+srv://camiloAdmin:madrid321431462@cluster0-rszgv.mongodb.net/test?retryWrites=true&w=majority')
 
@@ -9,6 +10,7 @@ let app = express()
 
 app.use(bodyParser.json());
 router(app)
+app.use(errors)
 
 app.use('/app', express.static('public'))
 
