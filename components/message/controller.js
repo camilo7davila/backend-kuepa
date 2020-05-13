@@ -24,11 +24,13 @@ async function addMessage(data) {
         user: data.user,
         message: data.message
     }
-    await store.add(fullMessage)
+    let message = await store.add(fullMessage)
+    
+    let search = await store.searchMessageByid(message._id)
 
-    socket.io.emit('message', fullMessage)
+    socket.io.emit('message', search)
 
-    return store.add(data)
+    return message
 }
 
 module.exports = {

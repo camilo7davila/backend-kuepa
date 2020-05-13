@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 
 function sign(user) {
     const auth = {
+        _id: user._id,
         name: user.name,
         userName: user.userName,
         rol: user.rol

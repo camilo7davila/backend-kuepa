@@ -26,4 +26,12 @@ router.post('/auth/login', (req,res) => {
     })
 })
 
+router.post('/auth/logout', (req,res) => {
+    controller.logout(req.body).then(data => {
+        response.success(req,res,data,202)
+    }).catch(e => {
+        response.error(req,res,e,500, e)
+    })
+})
+
 module.exports = router

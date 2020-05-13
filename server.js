@@ -23,6 +23,6 @@ app.use(errors)
 app.use('/app', express.static('public'))
 app.set('port', process.env.PORT || 3000)
 
-server.listen(app.get('port')), () => {
+server.listen(app.get('port'), () => {
     console.log(`La app esta escuchando en ${app.get('port')}`);
-}
+})

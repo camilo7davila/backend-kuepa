@@ -1,6 +1,7 @@
 const store = require('./store')
 const bcrypt = require('bcrypt')
-const authExport = require('../../auth/index') 
+const mongoose = require('mongoose')
+const authExport = require('../../auth/index')
 
 async function addUser(data) {
     if (!data.name || !data.userName || !data.password) {
@@ -11,6 +12,11 @@ async function addUser(data) {
         userName: data.userName,
         password: await bcrypt.hash(data.password, 5),
         rol: "ROL_STUDENT"
+    }
+    let validation = await store.validarUserName(data.userName)
+
+    if(validation.length !== 0) {
+        return Promise.reject('Nickname ya esta en uso')
     }
     let newUser = await store.add(fullUser)
 
@@ -24,25 +30,36 @@ async function login(data) {
         return Promise.reject('Formulario incompleto')
     }
     let user = await store.searchByuserName(data.userName)
-    if(user === null) {
+    if (user === null) {
         return Promise.reject('Usuario o contraseña incorrectos')
     }
 
     const userFinal = {
         token: authExport.sign(user)
     }
-    let password = await  bcrypt.compare(data.password, user.password)
-    if(password === true) {
+    let password = await bcrypt.compare(data.password, user.password)
+    if (password === true) {
         let online = await store.onlineUser(user._id)
-        if(online === true) {
+        if (online === true) {
             return userFinal
         }
-    }else {
+    } else {
         return Promise.reject('Usuario o contraseña incorrectos')
     }
 }
 
+async function logout(data) {
+    if (!data.id) {
+        return Promise.reject('Formulario incompleto')
+    }
+    if (!mongoose.Types.ObjectId.isValid(data.id)) {
+        return Promise.reject('Id no valido')
+    }
+    return store.offlineUser(data.id)
+}
+
 module.exports = {
     add: addUser,
-    login
+    login,
+    logout
 }
